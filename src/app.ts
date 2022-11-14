@@ -166,7 +166,10 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 }
 
 // ProjectItem Class
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+class ProjectItem
+  extends Component<HTMLUListElement, HTMLLIElement>
+  implements Draggable
+{
   private project: Project;
   get manday() {
     if (this.project.manday < 20) {
@@ -182,7 +185,20 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
     this.configure();
     this.renderContent();
   }
-  configure(): void {}
+
+  @autobind
+  dragStartHandler(event: DragEvent): void {
+    // dragStartイベントは必ず存在するのでエクスクラメーションしてOK
+    event.dataTransfer!.setData('text/plain', this.project.id)
+    event.dataTransfer!.effectAllowed = 'move';
+  }
+  dragEndHandler(_: DragEvent): void {
+    console.log("drag end");
+  }
+  configure(): void {
+    this.element.addEventListener("dragstart", this.dragStartHandler);
+    this.element.addEventListener("dragend", this.dragEndHandler);
+  }
   renderContent(): void {
     this.element.querySelector("h2")!.textContent = this.project.title;
     this.element.querySelector("h3")!.textContent = this.manday;
@@ -212,7 +228,11 @@ class ProjectList
 
   dropHandler(_: DragEvent): void {}
 
-  dragLeaveHandler(_: DragEvent): void {}
+  @autobind
+  dragLeaveHandler(_: DragEvent): void {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.remove("droppable");
+  }
 
   configure(): void {
     this.element.addEventListener("dragover", this.dragOverHandler);

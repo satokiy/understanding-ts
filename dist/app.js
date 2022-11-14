@@ -122,13 +122,27 @@ class ProjectItem extends Component {
             return (this.project.manday / 20).toString() + "人月";
         }
     }
-    configure() { }
+    dragStartHandler(event) {
+        // dragStartイベントは必ず存在するのでエクスクラメーションしてOK
+        event.dataTransfer.setData('text/plain', this.project.id);
+        event.dataTransfer.effectAllowed = 'move';
+    }
+    dragEndHandler(_) {
+        console.log("drag end");
+    }
+    configure() {
+        this.element.addEventListener("dragstart", this.dragStartHandler);
+        this.element.addEventListener("dragend", this.dragEndHandler);
+    }
     renderContent() {
         this.element.querySelector("h2").textContent = this.project.title;
         this.element.querySelector("h3").textContent = this.manday;
         this.element.querySelector("p").textContent = this.project.description;
     }
 }
+__decorate([
+    autobind
+], ProjectItem.prototype, "dragStartHandler", null);
 // ProjectList Class
 class ProjectList extends Component {
     constructor(type) {
@@ -143,7 +157,10 @@ class ProjectList extends Component {
         listEl.classList.add("droppable");
     }
     dropHandler(_) { }
-    dragLeaveHandler(_) { }
+    dragLeaveHandler(_) {
+        const listEl = this.element.querySelector("ul");
+        listEl.classList.remove("droppable");
+    }
     configure() {
         this.element.addEventListener("dragover", this.dragOverHandler);
         this.element.addEventListener("drop", this.dropHandler);
@@ -176,6 +193,9 @@ class ProjectList extends Component {
 __decorate([
     autobind
 ], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    autobind
+], ProjectList.prototype, "dragLeaveHandler", null);
 // ProjectInput Class
 class ProjectInput extends Component {
     constructor() {
