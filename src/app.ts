@@ -117,6 +117,18 @@ class ProjectState extends State<Project> {
       ProjectStatus.Active
     );
     this.projects.push(newProject);
+    this.updateListeners();
+  }
+
+  moveProject(projectId: string, newStatus: ProjectStatus) {
+    const project = this.projects.find((prj) => prj.id === projectId);
+    if (project && project.status !== newStatus) {
+      project.status = newStatus;
+      this.updateListeners();
+    }
+  }
+
+  private updateListeners() {
     for (const listenerFn of this.listeners) {
       listenerFn(this.projects.slice());
     }
@@ -189,8 +201,9 @@ class ProjectItem
   @autobind
   dragStartHandler(event: DragEvent): void {
     // dragStartイベントは必ず存在するのでエクスクラメーションしてOK
-    event.dataTransfer!.setData('text/plain', this.project.id)
-    event.dataTransfer!.effectAllowed = 'move';
+    event.dataTransfer!.setData("text/plain", this.project.id);
+    // ブラウザ上でカーソルがどのように表示されるかを指定
+    event.dataTransfer!.effectAllowed = "move";
   }
   dragEndHandler(_: DragEvent): void {
     console.log("drag end");
@@ -221,12 +234,25 @@ class ProjectList
   }
 
   @autobind
-  dragOverHandler(_: DragEvent): void {
-    const listEl = this.element.querySelector("ul")!;
-    listEl.classList.add("droppable");
+  dragOverHandler(event: DragEvent): void {
+    if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
+      // デフォルトではdropイベントは禁止されている（javascript）。preventDefaultすることでドロップを許可している
+      event.preventDefault();
+      const listEl = this.element.querySelector("ul")!;
+      listEl.classList.add("droppable");
+    }
   }
 
-  dropHandler(_: DragEvent): void {}
+  // dropイベントが実行されると呼ばれる
+  @autobind
+  dropHandler(event: DragEvent): void {
+    // console.log(event.dataTransfer!.getData('text/plain'));
+    const prjId = event.dataTransfer!.getData("text/plain");
+    projectState.moveProject(
+      prjId,
+      this.type === "active" ? ProjectStatus.Active : ProjectStatus.Finished
+    );
+  }
 
   @autobind
   dragLeaveHandler(_: DragEvent): void {

@@ -82,6 +82,16 @@ class ProjectState extends State {
     addProject(title, description, manday) {
         const newProject = new Project(Math.random().toString(), title, description, manday, ProjectStatus.Active);
         this.projects.push(newProject);
+        this.updateListeners();
+    }
+    moveProject(projectId, newStatus) {
+        const project = this.projects.find((prj) => prj.id === projectId);
+        if (project && project.status !== newStatus) {
+            project.status = newStatus;
+            this.updateListeners();
+        }
+    }
+    updateListeners() {
         for (const listenerFn of this.listeners) {
             listenerFn(this.projects.slice());
         }
@@ -124,8 +134,9 @@ class ProjectItem extends Component {
     }
     dragStartHandler(event) {
         // dragStartイベントは必ず存在するのでエクスクラメーションしてOK
-        event.dataTransfer.setData('text/plain', this.project.id);
-        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData("text/plain", this.project.id);
+        // ブラウザ上でカーソルがどのように表示されるかを指定
+        event.dataTransfer.effectAllowed = "move";
     }
     dragEndHandler(_) {
         console.log("drag end");
@@ -152,11 +163,20 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
-    dragOverHandler(_) {
-        const listEl = this.element.querySelector("ul");
-        listEl.classList.add("droppable");
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
+            // デフォルトではdropイベントは禁止されている（javascript）。preventDefaultすることでドロップを許可している
+            event.preventDefault();
+            const listEl = this.element.querySelector("ul");
+            listEl.classList.add("droppable");
+        }
     }
-    dropHandler(_) { }
+    // dropイベントが実行されると呼ばれる
+    dropHandler(event) {
+        // console.log(event.dataTransfer!.getData('text/plain'));
+        const prjId = event.dataTransfer.getData("text/plain");
+        projectState.moveProject(prjId, this.type === "active" ? ProjectStatus.Active : ProjectStatus.Finished);
+    }
     dragLeaveHandler(_) {
         const listEl = this.element.querySelector("ul");
         listEl.classList.remove("droppable");
@@ -193,6 +213,9 @@ class ProjectList extends Component {
 __decorate([
     autobind
 ], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    autobind
+], ProjectList.prototype, "dropHandler", null);
 __decorate([
     autobind
 ], ProjectList.prototype, "dragLeaveHandler", null);
