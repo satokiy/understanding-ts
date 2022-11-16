@@ -100,6 +100,22 @@ var App;
 })(App || (App = {}));
 var App;
 (function (App) {
+    // autobind decorator
+    function autobind(_, _2, descriptor) {
+        const originalMethod = descriptor.value;
+        const adjDescriptor = {
+            configurable: true,
+            get() {
+                const boundFn = originalMethod.bind(this);
+                return boundFn;
+            },
+        };
+        return adjDescriptor;
+    }
+    App.autobind = autobind;
+})(App || (App = {}));
+var App;
+(function (App) {
     // Component Class
     class Component {
         constructor(templateId, hostElementId, insertAtStart, newElementId) {
@@ -120,24 +136,7 @@ var App;
     }
     App.Component = Component;
 })(App || (App = {}));
-var App;
-(function (App) {
-    // autobind decorator
-    function autobind(_, _2, descriptor) {
-        const originalMethod = descriptor.value;
-        const adjDescriptor = {
-            configurable: true,
-            get() {
-                const boundFn = originalMethod.bind(this);
-                return boundFn;
-            },
-        };
-        return adjDescriptor;
-    }
-    App.autobind = autobind;
-})(App || (App = {}));
 /// <reference path="base-component.ts" />
-/// <reference path="../decorators/autobind.ts" />
 var App;
 (function (App) {
     // ProjectInput Class
@@ -203,7 +202,6 @@ var App;
     App.ProjectInput = ProjectInput;
 })(App || (App = {}));
 /// <reference path="base-component.ts" />
-/// <reference path="../decorators/autobind.ts" />
 var App;
 (function (App) {
     // ProjectList Class
@@ -278,6 +276,7 @@ var App;
 /// <reference path="models/project.ts" />
 /// <reference path="state/project-state.ts" />
 /// <reference path="util/validation.ts" />
+/// <reference path="decorators/autobind.ts" />
 /// <reference path="components/project-input.ts" />
 /// <reference path="components/project-list.ts" />
 var App;
@@ -287,7 +286,6 @@ var App;
     new App.ProjectList("finished");
 })(App || (App = {}));
 /// <reference path="base-component.ts" />
-/// <reference path="../decorators/autobind.ts" />
 var App;
 (function (App) {
     // ProjectItem Class
