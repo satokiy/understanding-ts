@@ -1,7 +1,9 @@
 # node_modules
 /node_modules/
 section13/node_modules/
-app/node_modules
+section9/node_modules
 
 # .env
 section13/.env
+
+.gitignore
