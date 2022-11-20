@@ -1,0 +1,25 @@
+{
+  "name": "section9",
+  "version": "1.0.0",
+  "description": "app-test",
+  "main": "index.js",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "lodash": "^4.17.21",
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack --config webpack.config.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satokiy/unsderstanding-ts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/satokiy/unsderstanding-ts/issues"
+  },
+  "homepage": "https://github.com/satokiy/unsderstanding-ts#readme"
+}
