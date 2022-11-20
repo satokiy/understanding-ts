@@ -2,7 +2,7 @@ html {
   font-family: sans-serif;
 }
 
-#map {
+#app {
   width: 90%;
   height: 20rem;
   border: 1px solid #ccc;
