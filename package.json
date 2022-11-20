@@ -28,7 +28,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "workspaces": [
-    "app",
+    "section9",
     "section13"
   ]
 }
