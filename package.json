@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "echo \"Error: スタートコマンドは各パッケージで定義してください\" && exit 1",
@@ -22,6 +23,7 @@
   },
   "dependencies": {},
   "workspaces": [
-    "app"
+    "app",
+    "section13"
   ]
 }

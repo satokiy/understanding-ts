@@ -1,0 +1,20 @@
+{
+  "name": "section13",
+  "version": "1.0.0",
+  "description": "Understanding TypeScript Course Setup",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lite-server": "lite-server",
+    "start": "webpack serve --mode development --config webpack.config.js",
+    "build": "webpack"
+  },
+  "keywords": [
+    "typescript",
+    "course"
+  ],
+  "author": "Maximilian Schwarzmüller",
+  "license": "ISC",
+  "devDependencies": {
+  }
+}
